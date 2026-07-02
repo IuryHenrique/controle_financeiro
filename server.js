@@ -8,6 +8,7 @@ const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(__dirname));
 app.use(express.static(path.join(__dirname, "public")));
 
 const db = new sqlite3.Database("banco.db", (err) => {
@@ -33,7 +34,7 @@ db.serialize(() => {
 });
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
+    res.sendFile(path.join(__dirname, "index.html"));
 });
 
 app.get("/api/movimentacoes", (req, res) => {
@@ -52,13 +53,9 @@ app.get("/api/movimentacoes", (req, res) => {
 app.post("/api/movimentacoes", (req, res) => {
     const { descricao, categoria, tipo, valor, data, limite } = req.body;
 
-    const sql = `
-        INSERT INTO movimentacoes (descricao, categoria, tipo, valor, data, limite)
-        VALUES (?, ?, ?, ?, ?, ?)
-    `;
-
     db.run(
-        sql,
+        `INSERT INTO movimentacoes (descricao, categoria, tipo, valor, data, limite)
+         VALUES (?, ?, ?, ?, ?, ?)`,
         [descricao, categoria, tipo, valor, data, limite ?? 0],
         function (err) {
             if (err) {
@@ -78,11 +75,9 @@ app.post("/api/movimentacoes", (req, res) => {
 });
 
 app.delete("/api/movimentacoes/:id", (req, res) => {
-    const { id } = req.params;
-
     db.run(
         "DELETE FROM movimentacoes WHERE id = ?",
-        [id],
+        [req.params.id],
         function (err) {
             if (err) {
                 return res.status(500).json({

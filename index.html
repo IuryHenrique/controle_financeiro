@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle Financeiro Inteligente</title>
-
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="public/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -21,7 +20,6 @@
                 <p>Dashboard Financeira</p>
             </div>
         </div>
-
         <div class="data-atual">
             <i class="fa-solid fa-calendar-days"></i>
             <span id="dataAtual"></span>
@@ -36,19 +34,16 @@
                 <h3>Saldo Atual</h3>
                 <h2 id="saldoAtual">R$ 0,00</h2>
             </div>
-
             <div class="card receita">
                 <i class="fa-solid fa-arrow-trend-up"></i>
                 <h3>Receitas</h3>
                 <h2 id="receitas">R$ 0,00</h2>
             </div>
-
             <div class="card despesa">
                 <i class="fa-solid fa-arrow-trend-down"></i>
                 <h3>Despesas</h3>
                 <h2 id="despesas">R$ 0,00</h2>
             </div>
-
             <div class="card limite">
                 <i class="fa-solid fa-piggy-bank"></i>
                 <h3>Orçamento</h3>
@@ -61,7 +56,6 @@
                 <i class="fa-solid fa-robot"></i>
                 Recomendações Inteligentes
             </h2>
-
             <div id="alertas">
                 <div class="alerta sucesso">✅ Bem-vindo ao sistema.</div>
                 <div class="alerta aviso">💡 Cadastre movimentações para receber análises automáticas.</div>
@@ -73,13 +67,11 @@
                 <i class="fa-solid fa-circle-plus"></i>
                 Nova Movimentação
             </h2>
-
             <form id="formFinanceiro">
                 <div class="grupo">
                     <label for="descricao">Descrição</label>
                     <input type="text" id="descricao" placeholder="Ex: Supermercado" required>
                 </div>
-
                 <div class="grupo">
                     <label for="categoria">Categoria</label>
                     <select id="categoria">
@@ -92,7 +84,6 @@
                         <option>Outros</option>
                     </select>
                 </div>
-
                 <div class="grupo">
                     <label for="tipo">Tipo</label>
                     <select id="tipo">
@@ -100,22 +91,18 @@
                         <option value="Despesa">Despesa</option>
                     </select>
                 </div>
-
                 <div class="grupo">
                     <label for="valor">Valor</label>
                     <input type="number" id="valor" placeholder="0.00" step="0.01" required>
                 </div>
-
                 <div class="grupo">
                     <label for="data">Data</label>
                     <input type="date" id="data" required>
                 </div>
-
                 <div class="grupo">
                     <label for="limite">Limite de Orçamento</label>
                     <input type="number" id="limite" placeholder="0.00" step="0.01" value="0">
                 </div>
-
                 <button type="submit">
                     <i class="fa-solid fa-floppy-disk"></i>
                     Cadastrar
@@ -128,7 +115,6 @@
                 <i class="fa-solid fa-table"></i>
                 Registros Financeiros
             </h2>
-
             <table>
                 <thead>
                     <tr>
@@ -152,7 +138,6 @@
                 </h2>
                 <canvas id="graficoCategoria"></canvas>
             </div>
-
             <div class="grafico">
                 <h2>
                     <i class="fa-solid fa-chart-column"></i>
@@ -172,8 +157,8 @@
         </p>
     </footer>
 
-    <script src="/js/script.js"></script>
-    <script src="/js/charts.js"></script>
+    <script src="public/js/script.js"></script>
+    <script src="public/js/charts.js"></script>
 
 </body>
 
