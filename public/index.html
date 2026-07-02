@@ -6,334 +6,174 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle Financeiro Inteligente</title>
 
-    <link rel="stylesheet" href="./public/css/style.css">
-
-    <!-- Ícones -->
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-    <!-- ChartJS -->
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
 
-    <!-- ================= HEADER ================= -->
-
     <header>
-
         <div class="logo">
-
             <i class="fa-solid fa-wallet"></i>
-
             <div>
-
                 <h2>Controle Financeiro Inteligente</h2>
-
                 <p>Dashboard Financeira</p>
-
             </div>
-
         </div>
 
         <div class="data-atual">
-
             <i class="fa-solid fa-calendar-days"></i>
-
             <span id="dataAtual"></span>
-
         </div>
-
     </header>
-
-    <!-- ================= CONTAINER ================= -->
 
     <main class="container">
 
-        <!-- ================= CARDS ================= -->
-
         <section class="cards">
-
             <div class="card saldo">
-
                 <i class="fa-solid fa-wallet"></i>
-
                 <h3>Saldo Atual</h3>
-
                 <h2 id="saldoAtual">R$ 0,00</h2>
-
             </div>
 
             <div class="card receita">
-
                 <i class="fa-solid fa-arrow-trend-up"></i>
-
                 <h3>Receitas</h3>
-
                 <h2 id="receitas">R$ 0,00</h2>
-
             </div>
 
             <div class="card despesa">
-
                 <i class="fa-solid fa-arrow-trend-down"></i>
-
                 <h3>Despesas</h3>
-
                 <h2 id="despesas">R$ 0,00</h2>
-
             </div>
 
             <div class="card limite">
-
                 <i class="fa-solid fa-piggy-bank"></i>
-
                 <h3>Orçamento</h3>
-
                 <h2 id="orcamento">R$ 0,00</h2>
-
             </div>
-
         </section>
 
         <section class="inteligencia">
-
             <h2>
-
                 <i class="fa-solid fa-robot"></i>
-
                 Recomendações Inteligentes
-
             </h2>
 
             <div id="alertas">
-
-                <div class="alerta sucesso">
-
-                    ✅ Bem-vindo ao sistema.
-
-                </div>
-
-                <div class="alerta aviso">
-
-                    💡 Cadastre movimentações para receber análises automáticas.
-
-                </div>
-
+                <div class="alerta sucesso">✅ Bem-vindo ao sistema.</div>
+                <div class="alerta aviso">💡 Cadastre movimentações para receber análises automáticas.</div>
             </div>
-
         </section>
 
-        <!-- ================= FORMULÁRIO ================= -->
-
         <section class="formulario">
-
             <h2>
-
                 <i class="fa-solid fa-circle-plus"></i>
-
                 Nova Movimentação
-
             </h2>
 
             <form id="formFinanceiro">
-
                 <div class="grupo">
-
-                    <label>Descrição</label>
-
-                    <input
-                        type="text"
-                        id="descricao"
-                        placeholder="Ex: Supermercado"
-                        required>
-
+                    <label for="descricao">Descrição</label>
+                    <input type="text" id="descricao" placeholder="Ex: Supermercado" required>
                 </div>
 
                 <div class="grupo">
-
-                    <label>Categoria</label>
-
+                    <label for="categoria">Categoria</label>
                     <select id="categoria">
-
                         <option>Alimentação</option>
-
                         <option>Transporte</option>
-
                         <option>Moradia</option>
-
                         <option>Saúde</option>
-
                         <option>Educação</option>
-
                         <option>Lazer</option>
-
                         <option>Outros</option>
-
                     </select>
-
                 </div>
 
                 <div class="grupo">
-
-                    <label>Tipo</label>
-
+                    <label for="tipo">Tipo</label>
                     <select id="tipo">
-
                         <option value="Receita">Receita</option>
-
                         <option value="Despesa">Despesa</option>
-
                     </select>
-
                 </div>
 
                 <div class="grupo">
-
-                    <label>Valor</label>
-
-                    <input
-                        type="number"
-                        id="valor"
-                        placeholder="0.00"
-                        step="0.01"
-                        required>
-
+                    <label for="valor">Valor</label>
+                    <input type="number" id="valor" placeholder="0.00" step="0.01" required>
                 </div>
 
                 <div class="grupo">
-
-                    <label>Data</label>
-
-                    <input
-                        type="date"
-                        id="data"
-                        required>
-
+                    <label for="data">Data</label>
+                    <input type="date" id="data" required>
                 </div>
 
                 <div class="grupo">
-
-                    <label>Limite de Orçamento</label>
-
-                    <input
-                        type="number"
-                        id="limite"
-                        placeholder="0.00">
-
+                    <label for="limite">Limite de Orçamento</label>
+                    <input type="number" id="limite" placeholder="0.00" step="0.01" value="0">
                 </div>
 
                 <button type="submit">
-
                     <i class="fa-solid fa-floppy-disk"></i>
-
                     Cadastrar
-
                 </button>
-
             </form>
-
         </section>
 
-        <!-- ================= TABELA ================= -->
-
         <section class="tabela">
-
             <h2>
-
                 <i class="fa-solid fa-table"></i>
-
                 Registros Financeiros
-
             </h2>
 
             <table>
-
                 <thead>
-
                     <tr>
-
                         <th>Data</th>
-
                         <th>Descrição</th>
-
                         <th>Categoria</th>
-
                         <th>Tipo</th>
-
                         <th>Valor</th>
-
                         <th>Ações</th>
-
                     </tr>
-
                 </thead>
-
-                <tbody id="tabelaRegistros">
-
-                    <!-- Será preenchida pelo JavaScript -->
-
-                </tbody>
-
+                <tbody id="tabelaRegistros"></tbody>
             </table>
-
         </section>
-
-        <!-- ================= GRÁFICOS ================= -->
 
         <section class="graficos">
-
             <div class="grafico">
-
                 <h2>
-
                     <i class="fa-solid fa-chart-pie"></i>
-
                     Gastos por Categoria
-
                 </h2>
-
                 <canvas id="graficoCategoria"></canvas>
-
             </div>
 
             <div class="grafico">
-
                 <h2>
-
                     <i class="fa-solid fa-chart-column"></i>
-
                     Receitas x Despesas
-
                 </h2>
-
                 <canvas id="graficoReceitaDespesa"></canvas>
-
             </div>
-
         </section>
 
-    
     </main>
 
-    <!-- ================= FOOTER ================= -->
-
     <footer>
-
         <p>
-
             Sistema Inteligente de Controle Financeiro
-
             <br>
-
             Desenvolvido por Iury Henrique, Pedro Maia e Tiago Maia
-
         </p>
-
     </footer>
 
-    <script src="./public/js/script.js"></script>
-    <script src="./public/js/charts.js"></script>
+    <script src="/js/script.js"></script>
+    <script src="/js/charts.js"></script>
 
 </body>
 

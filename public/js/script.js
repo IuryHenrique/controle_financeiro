@@ -1,373 +1,175 @@
-/*==================================================
-    CONTROLE FINANCEIRO INTELIGENTE
-    script.js
-==================================================*/
-
-
-// ============================================
-// ELEMENTOS
-// ============================================
-
 const formulario = document.getElementById("formFinanceiro");
-
 const tabela = document.getElementById("tabelaRegistros");
-
 const saldoAtual = document.getElementById("saldoAtual");
-
 const receitas = document.getElementById("receitas");
-
 const despesas = document.getElementById("despesas");
-
 const orcamento = document.getElementById("orcamento");
-
 const dataAtual = document.getElementById("dataAtual");
-
 const alertas = document.getElementById("alertas");
 
-const API_URL = "http://localhost:3000/api/movimentacoes";
-// ============================================
-// BANCO LOCAL
-// ============================================
+const API_URL = "/api/movimentacoes";
 
 let movimentacoes = [];
 
-// ============================================
-// DATA
-// ============================================
-
 function mostrarData() {
-
     const hoje = new Date();
-
-    dataAtual.innerHTML =
-        hoje.toLocaleDateString("pt-BR");
-
+    dataAtual.textContent = hoje.toLocaleDateString("pt-BR");
 }
 
-
-
-
-// ============================================
-// CADASTRAR
-// ============================================
+function formatarMoeda(valor) {
+    return "R$ " + Number(valor).toFixed(2);
+}
 
 formulario.addEventListener("submit", async function (e) {
-
     e.preventDefault();
 
-    const descricao =
-        document.getElementById("descricao").value;
-
-    const categoria =
-        document.getElementById("categoria").value;
-
-    const tipo =
-        document.getElementById("tipo").value;
-
-    const valor =
-        Number(document.getElementById("valor").value);
-
-    const data =
-        document.getElementById("data").value;
-
-    const limite =
-        Number(document.getElementById("limite").value);
-
     const movimentacao = {
-
-        id: Date.now(),
-
-        descricao,
-
-        categoria,
-
-        tipo,
-
-        valor,
-
-        data,
-
-        limite
-
+        descricao: document.getElementById("descricao").value,
+        categoria: document.getElementById("categoria").value,
+        tipo: document.getElementById("tipo").value,
+        valor: Number(document.getElementById("valor").value),
+        data: document.getElementById("data").value,
+        limite: Number(document.getElementById("limite").value) || 0
     };
 
     await cadastrarMovimentacao(movimentacao);
-
     formulario.reset();
-
 });
 
-
-// ============================================
-// TABELA
-// ============================================
-
 function carregarTabela() {
-
     tabela.innerHTML = "";
 
-    movimentacoes.forEach(item => {
+    movimentacoes.forEach((item) => {
+        const linha = document.createElement("tr");
 
-        tabela.innerHTML += `
-
-        <tr>
-
+        linha.innerHTML = `
             <td>${item.data}</td>
-
             <td>${item.descricao}</td>
-
             <td>${item.categoria}</td>
-
             <td>${item.tipo}</td>
-
-            <td>R$ ${item.valor.toFixed(2)}</td>
-
+            <td>${formatarMoeda(item.valor)}</td>
             <td>
-
-                <button
-
-                    class="excluir"
-
-                    onclick="excluir(${item.id})">
-
-                    Excluir
-
-                </button>
-
+                <button class="excluir" data-id="${item.id}">Excluir</button>
             </td>
-
-        </tr>
-
         `;
 
+        linha.querySelector(".excluir").addEventListener("click", () => {
+            excluir(item.id);
+        });
+
+        tabela.appendChild(linha);
     });
-
 }
 
+async function excluir(id) {
+    try {
+        const resposta = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
 
-// ============================================
-// EXCLUIR
-// ============================================
+        if (!resposta.ok) {
+            throw new Error("Não foi possível excluir a movimentação.");
+        }
 
-function excluir(id){
-
-    movimentacoes =
-
-        movimentacoes.filter(
-
-            item => item.id !== id
-
-        );
-
-    salvarLocal();
-
-    atualizarSistema();
-
+        await carregarMovimentacoes();
+    } catch (erro) {
+        console.error("Erro:", erro);
+    }
 }
 
-
-// ============================================
-// CARDS
-// ============================================
-
-function atualizarCards(){
-
+function atualizarCards() {
     let totalReceitas = 0;
-
     let totalDespesas = 0;
-
     let limiteTotal = 0;
 
-    movimentacoes.forEach(item=>{
-
-        if(item.tipo==="Receita"){
-
+    movimentacoes.forEach((item) => {
+        if (item.tipo === "Receita") {
             totalReceitas += item.valor;
-
-        }
-
-        else{
-
+        } else {
             totalDespesas += item.valor;
-
         }
 
-        limiteTotal += item.limite;
-
+        limiteTotal += item.limite || 0;
     });
 
-    receitas.innerHTML =
-        "R$ " + totalReceitas.toFixed(2);
-
-    despesas.innerHTML =
-        "R$ " + totalDespesas.toFixed(2);
-
-    saldoAtual.innerHTML =
-        "R$ " + (totalReceitas-totalDespesas).toFixed(2);
-
-    orcamento.innerHTML =
-        "R$ " + limiteTotal.toFixed(2);
-
+    receitas.textContent = formatarMoeda(totalReceitas);
+    despesas.textContent = formatarMoeda(totalDespesas);
+    saldoAtual.textContent = formatarMoeda(totalReceitas - totalDespesas);
+    orcamento.textContent = formatarMoeda(limiteTotal);
 }
 
-
-// ============================================
-// ALERTAS
-// ============================================
-
-function atualizarAlertas(){
-
+function atualizarAlertas() {
     alertas.innerHTML = "";
 
     let receita = 0;
-
     let despesa = 0;
 
-    movimentacoes.forEach(item=>{
-
-        if(item.tipo==="Receita")
-
+    movimentacoes.forEach((item) => {
+        if (item.tipo === "Receita") {
             receita += item.valor;
-
-        else
-
+        } else {
             despesa += item.valor;
-
+        }
     });
 
-    if(receita===0 && despesa===0){
-
-        alertas.innerHTML += `
-
-        <div class="alerta aviso">
-
-            💡 Cadastre sua primeira movimentação.
-
-        </div>
-
+    if (receita === 0 && despesa === 0) {
+        alertas.innerHTML = `
+            <div class="alerta aviso">💡 Cadastre sua primeira movimentação.</div>
         `;
-
         return;
-
     }
 
-    if(despesa>receita){
-
-        alertas.innerHTML += `
-
-        <div class="alerta erro">
-
-            🚨 Você está gastando mais do que recebe.
-
-        </div>
-
+    if (despesa > receita) {
+        alertas.innerHTML = `
+            <div class="alerta erro">🚨 Você está gastando mais do que recebe.</div>
         `;
-
-    }
-
-    else{
-
-        alertas.innerHTML += `
-
-        <div class="alerta sucesso">
-
-            ✅ Suas finanças estão equilibradas.
-
-        </div>
-
+    } else {
+        alertas.innerHTML = `
+            <div class="alerta sucesso">✅ Suas finanças estão equilibradas.</div>
         `;
-
     }
-
 }
-
-// ============================================
-// CADASTRAR NO BANCO
-// ============================================
 
 async function cadastrarMovimentacao(movimentacao) {
-
     try {
-
         const resposta = await fetch(API_URL, {
-
             method: "POST",
-
-            headers: {
-
-                "Content-Type": "application/json"
-
-            },
-
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(movimentacao)
-
         });
 
-        const dados = await resposta.json();
+        if (!resposta.ok) {
+            throw new Error("Não foi possível cadastrar a movimentação.");
+        }
 
-        console.log(dados);
-
-        carregarMovimentacoes();
-
-    }
-
-    catch (erro) {
-
+        await carregarMovimentacoes();
+    } catch (erro) {
         console.error("Erro:", erro);
-
     }
-
 }
-
-// ============================================
-// BUSCAR MOVIMENTAÇÕES
-// ============================================
 
 async function carregarMovimentacoes() {
-
     try {
-
         const resposta = await fetch(API_URL);
 
+        if (!resposta.ok) {
+            throw new Error("Não foi possível carregar as movimentações.");
+        }
+
         movimentacoes = await resposta.json();
-
         atualizarSistema();
-
-    }
-
-    catch (erro) {
-
+    } catch (erro) {
         console.error(erro);
-
     }
-
 }
 
-// ============================================
-// SISTEMA
-// ============================================
-
-function atualizarSistema(){
-
+function atualizarSistema() {
     carregarTabela();
-
     atualizarCards();
-
     atualizarAlertas();
 
-    if(typeof atualizarGraficos==="function"){
-
+    if (typeof atualizarGraficos === "function") {
         atualizarGraficos(movimentacoes);
-
     }
-
 }
 
-
-// ============================================
-// INICIAR
-// ============================================
-
 mostrarData();
-
 carregarMovimentacoes();
